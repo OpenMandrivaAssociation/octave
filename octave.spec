@@ -77,6 +77,8 @@ BuildRequires:	portaudio-devel
 BuildRequires:	sndfile-devel
 BuildRequires:	gl2ps-devel
 BuildRequires:	pkgconfig(osmesa)
+BuildRequires:	pkgconfig(xft)
+BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	ghostscript-devel
 BuildRequires:	java-1.8.0-openjdk-devel
 %rename	octave3
