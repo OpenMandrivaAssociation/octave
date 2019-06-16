@@ -60,6 +60,7 @@ BuildRequires:	colamd-devel
 BuildRequires:	cxsparse-devel
 BuildRequires:	umfpack-devel
 # (Lev) other useful libraries
+BuildRequires:	mpi-devel
 BuildRequires:	qhull-devel
 BuildRequires:	qrupdate-devel
 # (Lev) for new experimental plotting
@@ -79,6 +80,7 @@ BuildRequires:  pkgconfig(Qt5Help)
 BuildRequires:  pkgconfig(Qt5Xml)
 BuildRequires:  pkgconfig(Qt5OpenGL)
 BuildRequires:  qscintilla-qt5-devel
+BuildRequires:  qtchooser
 BuildRequires:	qt5-linguist-tools
 BuildRequires:	portaudio-devel
 BuildRequires:	sndfile-devel
