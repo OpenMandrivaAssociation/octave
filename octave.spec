@@ -1,3 +1,8 @@
+# WARNING missing BR:
+# configure: WARNING: SUNDIALS NVECTOR serial library not found.  Solvers ode15i and ode15s will be disabled.
+# configure: WARNING: SUNDIALS IDA library not found.  Solvers ode15i and ode15s will be disabled.
+# configure: WARNING: JAVA_HOME environment variable not initialized.  Auto-detection will proceed but is unreliable.
+
 %define octave_api api-v51
 %define _disable_rebuild_configure 1
 %define _disable_lto 1
@@ -15,7 +20,6 @@ Source100:	octave.rpmlintrc
 
 # fix usage of bsdtar with unpack
 Patch1:		octave-4.2.0-bsdtar.patch
-
 # This patch is required when installing all sagemath dependencies,
 # otherwise it will fail with a message like:
 #
@@ -70,6 +74,9 @@ BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Gui)
 BuildRequires:  pkgconfig(Qt5Network)
+BuildRequires:  pkgconfig(Qt5PrintSupport)
+BuildRequires:  pkgconfig(Qt5Help)
+BuildRequires:  pkgconfig(Qt5Xml)
 BuildRequires:  pkgconfig(Qt5OpenGL)
 BuildRequires:  qscintilla-qt5-devel
 BuildRequires:	qt5-linguist-tools
@@ -101,6 +108,27 @@ extensible and customizable via user-defined functions written in
 Octave's own language, or using dynamically loaded modules written in
 C++, C, Fortran, or other languages.
 
+%files
+%defattr(0644,root,root,0755)
+%doc NEWS* AUTHORS BUGS README
+%doc examples INSTALL.OCTAVE
+%defattr(-,root,root,0755)
+%{_bindir}/octave*
+%config(noreplace) /etc/ld.so.conf.d/*
+%{_libdir}/octave*
+%{_datadir}/octave
+%{_datadir}/appdata/www.octave.org-octave.appdata.xml
+%{_datadir}/icons/*/*/apps/octave.png
+%{_datadir}/icons/*/*/apps/octave.svg
+%if "%{_libdir}" != "%{_libexecdir}"
+%{_libexecdir}/octave
+%endif
+%{_mandir}/man*/octave*
+%{_infodir}/octave.info*
+%{_datadir}/applications/*
+
+#---------------------------------------------------------------------------
+
 %package devel
 Summary:	Development headers and files for Octave
 Group:		Development/C
@@ -127,6 +155,16 @@ Requires:	pkgconfig(glu)
 The octave-devel package contains files needed for developing
 applications which use GNU Octave.
 
+%files devel
+%defattr(0644,root,root,0755)
+%attr(0755,root,root) %{_bindir}/mkoctfile*
+%{_includedir}/octave-%{version}
+#% {multiarch_includedir}/octave-%{version}
+%{_mandir}/man1/mkoctfile.1*
+%{_sysconfdir}/rpm/macros.d/%{name}.macros
+
+#---------------------------------------------------------------------------
+
 %package doc
 Summary:	Documentation for Octave, a numerical computational language
 Group:		Sciences/Mathematics
@@ -139,6 +177,12 @@ other numerical experiments using a language that is mostly compatible
 with Matlab. It may also be used as a batch-oriented language.
 
 This package contains documentation of Octave in various formats.
+
+%files doc
+%doc doc/refcard/refcard-a4.pdf
+%{_infodir}/liboctave.*
+
+#---------------------------------------------------------------------------
 
 %prep
 %setup -q
@@ -155,7 +199,7 @@ export CXX=g++
 export CPPFLAGS="%{optflags} -DH5_USE_16_API"
 # find lrelease
 export PATH=%_libdir/qt5/bin:$PATH
-%configure2_5x \
+%configure \
 	--enable-dl \
 	--enable-shared \
 	--disable-static \
@@ -168,15 +212,15 @@ export PATH=%_libdir/qt5/bin:$PATH
         --with-blas="-L%{_libdir}/atlas -ltatlas" \
         --with-lapack="-L%{_libdir}/atlas -ltatlas" \
 	%{nil}
-%make OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
+%make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 # emacs mode
 
 %install
-%makeinstall_std
+%make_install
 
 # Make library links
-mkdir -p %{buildroot}/etc/ld.so.conf.d
+install -dm 0755 %{buildroot}/etc/ld.so.conf.d
 /bin/echo "%{_libdir}/octave-%{version}" > %{buildroot}/etc/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
@@ -186,52 +230,22 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/octave/ls-R
 %{_bindir}/find %{buildroot} -name "*.oct" -print0 | %{_bindir}/xargs -t -0 -r strip --strip-unneeded
 
 # prepare documentation
-%__rm -rf package-doc
-mkdir -p package-doc
+rm -rf package-doc
+install -dm 0744 package-doc
 
 # Create desktop file
-mv %{buildroot}%{_datadir}/applications/www.octave.org-octave.desktop \
+mv %{buildroot}%{_datadir}/applications/org.octave.Octave.desktop \
         %{buildroot}%{_datadir}/applications/octave.desktop
-%{_bindir}/desktop-file-install --add-category Education --remove-category Development \
-        --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/octave.desktop
+%{_bindir}/desktop-file-install \
+	--add-category Education \
+	--remove-category Development \
+        --dir %{buildroot}%{_datadir}/applications \
+	%{buildroot}%{_datadir}/applications/octave.desktop
 
-mkdir -p %{buildroot}%{_datadir}/octave/packages
+install -dm 0755 %{buildroot}%{_datadir}/octave/packages
 /bin/touch %{buildroot}%{_datadir}/octave/octave_packages
 
 #% multiarch_includes %{buildroot}%{_includedir}/octave-%{version}/octave/*.h
 
-mkdir -p %{buildroot}%{_sysconfdir}/rpm/macros.d/
-cp -p %{SOURCE99} %{buildroot}%{_sysconfdir}/rpm/macros.d/
-
-%files
-%defattr(0644,root,root,0755)
-%doc NEWS* AUTHORS BUGS README
-%doc examples INSTALL.OCTAVE
-%defattr(-,root,root,0755)
-%{_bindir}/octave*
-%config(noreplace) /etc/ld.so.conf.d/*
-%{_libdir}/octave*
-%{_datadir}/octave
-%{_datadir}/appdata/www.octave.org-octave.appdata.xml
-%{_datadir}/icons/*/*/apps/octave.png
-%{_datadir}/icons/*/*/apps/octave.svg
-%if "%{_libdir}" != "%{_libexecdir}"
-%{_libexecdir}/octave
-%endif
-%{_mandir}/man*/octave*
-%{_infodir}/octave.info*
-%{_datadir}/applications/*
-
-%files devel
-%defattr(0644,root,root,0755)
-%attr(0755,root,root) %{_bindir}/mkoctfile*
-%{_includedir}/octave-%{version}
-#% {multiarch_includedir}/octave-%{version}
-%{_mandir}/man1/mkoctfile.1*
-%{_sysconfdir}/rpm/macros.d/%{name}.macros
-
-%files doc
-%defattr(0644,root,root,0755)
-%doc doc/refcard/refcard-a4.pdf
-%{_infodir}/liboctave.*
-
+install -dm 0755 %{buildroot}%{_sysconfdir}/rpm/macros.d/
+install -pm 0644 %{SOURCE99} %{buildroot}%{_sysconfdir}/rpm/macros.d/
