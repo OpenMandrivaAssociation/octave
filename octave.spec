@@ -60,7 +60,7 @@ BuildRequires:	colamd-devel
 BuildRequires:	cxsparse-devel
 BuildRequires:	umfpack-devel
 # (Lev) other useful libraries
-BuildRequires:	mpi-devel
+BuildRequires:	pkgconfig(ompi)
 BuildRequires:	qhull-devel
 BuildRequires:	qrupdate-devel
 # (Lev) for new experimental plotting
