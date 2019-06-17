@@ -9,7 +9,7 @@
 
 Name:		octave
 Version:	4.4.1
-Release:	1
+Release:	2
 Summary:	High-level language for numerical computations
 License:	GPLv3+
 Group:		Sciences/Mathematics
@@ -192,6 +192,9 @@ This package contains documentation of Octave in various formats.
 %ifarch %{ix86}
 %patch3 -p1
 %endif
+
+# fix lrelease syntax
+sed -i -e 's!LRELEASEFLAGS="-qt$qt_version"!LRELEASEFLAGS=!' configure
 
 %build
 export CC=gcc
