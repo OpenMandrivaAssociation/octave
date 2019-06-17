@@ -217,7 +217,7 @@ export PATH=%_libdir/qt5/bin:$PATH
         --with-blas="-L%{_libdir}/atlas -ltatlas" \
         --with-lapack="-L%{_libdir}/atlas -ltatlas" \
 	%{nil}
-%make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
+make OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 # emacs mode
 
@@ -241,7 +241,7 @@ install -dm 0744 package-doc
 # Create desktop file
 mv %{buildroot}%{_datadir}/applications/org.octave.Octave.desktop \
         %{buildroot}%{_datadir}/applications/octave.desktop
-%{_bindir}/desktop-file-install \
+desktop-file-install \
 	--add-category Education \
 	--remove-category Development \
         --dir %{buildroot}%{_datadir}/applications \
