@@ -40,7 +40,7 @@ BuildRequires:	gnuplot
 # (Abel) not strictly needed, but play safe
 BuildRequires:	gperf
 BuildRequires:	texinfo
-#BuildRequires:	texlive
+BuildRequires:	texlive
 BuildRequires:	glpk-devel
 BuildRequires:	hdf5-devel
 BuildRequires:	readline-devel
