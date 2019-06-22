@@ -222,7 +222,7 @@ make OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 # emacs mode
 
 %install
-%make_install
+make install
 
 # Make library links
 install -dm 0755 %{buildroot}/etc/ld.so.conf.d
