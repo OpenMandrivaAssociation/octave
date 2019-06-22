@@ -204,6 +204,7 @@ export CXX=g++
 export CPPFLAGS="%{optflags} -DH5_USE_16_API"
 # find lrelease
 export PATH=%_libdir/qt5/bin:$PATH
+export QCOLLECTIONGENERATOR=qhelpgenerator
 %configure \
 	--enable-dl \
 	--enable-shared \
@@ -234,11 +235,11 @@ perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/octave/ls-R
 
 %{_bindir}/find %{buildroot} -name "*.oct" -print0 | %{_bindir}/xargs -t -0 -r strip --strip-unneeded
 
-# prepare documentation
+# docs
 rm -rf package-doc
 install -dm 0744 package-doc
 
-# Create desktop file
+# .desktop
 mv %{buildroot}%{_datadir}/applications/org.octave.Octave.desktop \
         %{buildroot}%{_datadir}/applications/octave.desktop
 desktop-file-install \
@@ -247,10 +248,10 @@ desktop-file-install \
         --dir %{buildroot}%{_datadir}/applications \
 	%{buildroot}%{_datadir}/applications/octave.desktop
 
-install -dm 0755 %{buildroot}%{_datadir}/octave/packages
+# packages
+install -dm 0755 %{buildroot}%{_datadir}/octave/packages/
 /bin/touch %{buildroot}%{_datadir}/octave/octave_packages
 
-#% multiarch_includes %{buildroot}%{_includedir}/octave-%{version}/octave/*.h
-
+# rpm
 install -dm 0755 %{buildroot}%{_sysconfdir}/rpm/macros.d/
 install -pm 0644 %{SOURCE99} %{buildroot}%{_sysconfdir}/rpm/macros.d/
