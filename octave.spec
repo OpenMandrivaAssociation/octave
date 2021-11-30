@@ -1,15 +1,15 @@
 %global octave_api api-v56
 
-%bcond_with		atlas
+%bcond_without	atlas
 %bcond_without	docs
 %bcond_without	java
-%bcond_with		jit
+%bcond_with	jit
 %bcond_without	64bit_support
 
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	6.3.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -80,6 +80,7 @@ BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	qhull-devel
 BuildRequires:	qrupdate-devel
+BuildRequires:	qt5-assistant
 BuildRequires:	qt5-linguist
 BuildRequires:	qt5-linguist-tools
 BuildRequires:	qt5-qtchooser
@@ -221,21 +222,13 @@ cp -a %{SOURCE20} %{name}.el
 %configure \
 	--enable-shared \
 	--disable-static \
-%if %{with 64bit_support}
-	--enable-64=yes \
-%else
-	--enable-64=no \
-%endif
-%if !%{with docs}
-	--disable-docs \
-%endif
+	--%{?with_64bit_support:en}%{?!with_64bit_support:dis}able-64=yes \
+	--%{?with_docs:en}%{?!with_docs:dis}able-docs \
 %if %{with atlas}
 	--with-blas="-L%{_libdir}/atlas -ltatlas" \
 	--with-lapack="-L%{_libdir}/atlas -ltatlas" \
 %endif
-%if %{with jit}
-	--enable-jit \
-%endif
+	--%{?with_jit:en}%{?!with_jit:dis}able-jit \
 	--enable-link-all-dependencies \
 	%{nil}
 
