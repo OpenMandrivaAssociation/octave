@@ -35,11 +35,11 @@ BuildRequires:	bison
 BuildRequires:	emacs-nox
 BuildRequires:	flex
 BuildRequires:	fltk-devel
+BuildRequires:	gcc-gfortran
+BuildRequires:	ghostscript-devel
 BuildRequires:	gl2ps-devel
 BuildRequires:	glpk-devel
 BuildRequires:	gnuplot
-BuildRequires:	gcc-gfortran
-BuildRequires:	ghostscript-devel
 BuildRequires:	gperf
 BuildRequires:	hdf5-devel
 %if %{with java}
@@ -47,6 +47,7 @@ BuildRequires:	java-devel
 #BuildRequires:	javapackages-local
 %endif
 BuildRequires:	icoutils
+BuildRequires:	less
 BuildRequires:	librsvg
 %if %{with jit}
 BuildRequires:	llvm-devel
@@ -56,6 +57,7 @@ BuildRequires:	pkgconfig(arpack)
 BuildRequires:	pkgconfig(atlas)
 %endif
 BuildRequires:	pkgconfig(blas)
+BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fftw3)
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(freetype2)
@@ -67,6 +69,7 @@ BuildRequires:	pkgconfig(lapack)
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	pkgconfig(ncurses)
 #BuildRequires:	pkgconfig(osmesa)
+BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(portaudio-2.0)
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5Gui)
@@ -77,9 +80,14 @@ BuildRequires:	pkgconfig(Qt5Help)
 BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:	pkgconfig(readline)
 BuildRequires:	pkgconfig(sndfile)
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xft)
+BuildRequires:	pkgconfig(xinerama)
+BuildRequires:	pkgconfig(xrender)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	qhull-devel
 BuildRequires:	qrupdate-devel
+BuildRequires:	qtchooser
 BuildRequires:	qt5-assistant
 BuildRequires:	qt5-linguist
 BuildRequires:	qt5-linguist-tools
