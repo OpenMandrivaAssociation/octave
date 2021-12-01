@@ -51,6 +51,9 @@ BuildRequires:	less
 BuildRequires:	librsvg
 %if %{with jit}
 BuildRequires:	llvm-devel
+BuildRequires:	locales-fr
+#BuildRequires:	locales-ja
+#BuildRequires:	locales-zh
 %endif
 BuildRequires:	pkgconfig(arpack)
 %if %{with atlas}
@@ -163,6 +166,9 @@ Requires:	gl2ps-devel
 Requires:	gnuplot
 Requires:	hdf5-devel
 Requires:	pkgconfig(arpack)
+%if %{with atlas}
+Requires:	pkgconfig(atlas)
+%endif
 Requires:	pkgconfig(blas)
 Requires:	pkgconfig(fontconfig)
 Requires:	pkgconfig(fftw3)
@@ -240,6 +246,9 @@ cp -a %{SOURCE20} %{name}.el
 	--enable-link-all-dependencies \
 	%{nil}
 
+# lrelease doesn't require -qt option
+sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
+
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 # emacs mode
@@ -285,4 +294,3 @@ install -pm 0644 %{SOURCE10} %{buildroot}%{_sysconfdir}/rpm/macros.d/%{name}.mac
 install -dm 0755 %{buildroot}%{_sysconfdir}/emacs/site-start.d
 install -pm 0644 %{name}.elc %{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.elc
 install -pm 0644 %{name}.el %{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.el
-
