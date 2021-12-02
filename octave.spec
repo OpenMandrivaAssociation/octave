@@ -55,6 +55,7 @@ BuildRequires:	locales-fr
 #BuildRequires:	locales-ja
 #BuildRequires:	locales-zh
 %endif
+BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(arpack)
 %if %{with atlas}
 BuildRequires:	pkgconfig(atlas)
@@ -100,7 +101,7 @@ BuildRequires:	qscintilla-qt5-devel
 BuildRequires:	suitesparse-devel
 BuildRequires:	sundials-devel
 BuildRequires:	texinfo
-#BuildRequires:	texlive
+BuildRequires:	texlive
 
 Requires:	gnuplot
 Requires:	graphicsmagick
@@ -217,11 +218,14 @@ with Matlab. It may also be used as a batch-oriented language.
 This package contains documentation of Octave in various formats.
 
 %files doc
-%doc doc/refcard/*.pdf
-%doc doc/interpreter/*.pdf
-%doc doc/liboctave/*.pdf
-%doc package-doc/*
-%{_infodir}/liboctave.*
+%dir %{_pkgdocdir}
+%{_pkgdocdir}/examples/
+%{_pkgdocdir}/liboctave.html/
+%{_pkgdocdir}/liboctave.pdf
+%{_pkgdocdir}/octave.html
+%{_pkgdocdir}/octave.pdf
+%{_pkgdocdir}/refcard*.pdf
+<%{_infodir}/liboctave.*
 %endif
 
 #---------------------------------------------------------------------------
@@ -253,9 +257,9 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
 # docs
 %if %{with docs}
-	%make install-data install-html install-info install-pdf DESTDIR=%{buildroot}
-	rm -rf package-doc
-	install -dm 0744 package-doc
+	%make_build install-data install-html install-info install-pdf DESTDIR=%{buildroot}
+	install -dm 0755 %{buildroot}%{_pkgdocdir}
+    install -pm 0644 doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
 %endif
 
 # Make library links
