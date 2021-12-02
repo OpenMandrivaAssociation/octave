@@ -8,8 +8,8 @@
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	6.3.0
-Release:	2
+Version:	6.4.0
+Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -130,7 +130,6 @@ C++, C, Fortran, or other languages.
 %doc NEWS* AUTHORS BUGS README
 %doc examples INSTALL.OCTAVE
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
-#config(noreplace) %{_sysconfdir}/emacs/site-start.d/%{name}.el*
 %{_bindir}/%{name}*
 %{_libdir}/%{name}/site
 %{_libdir}/%{name}/%{version}/oct
@@ -229,8 +228,6 @@ This package contains documentation of Octave in various formats.
 
 %prep
 %autosetup -p1
-# emacs mode
-#cp -a %{SOURCE20} %{name}.el
 
 %build
 %configure \
@@ -249,13 +246,10 @@ This package contains documentation of Octave in various formats.
 # lrelease doesn't require -qt option
 sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
-#make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
-
-# emacs mode
-#{_bindir}/emacs -batch -q -no-site-file -f batch-byte-compile %{name}.el
+%make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 %install
-#make_install
+%make_install
 
 # docs
 %if %{with docs}
@@ -290,7 +284,3 @@ install -dm 0755 %{buildroot}%{_datadir}/octave/packages/
 install -dm 0755 %{buildroot}%{_sysconfdir}/rpm/macros.d/
 install -pm 0644 %{SOURCE10} %{buildroot}%{_sysconfdir}/rpm/macros.d/%{name}.macros
 
-# emacs mode
-#install -dm 0755 %{buildroot}%{_sysconfdir}/emacs/site-start.d
-#install -pm 0644 %{name}.elc %{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.elc
-#install -pm 0644 %{name}.el %{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.el
