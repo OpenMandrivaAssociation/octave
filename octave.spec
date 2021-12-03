@@ -148,7 +148,7 @@ C++, C, Fortran, or other languages.
 %{_datadir}/%{name}/packages/
 %{_datadir}/%{name}/site/
 %if %{with docs}
-%{_mandir}/man*/%{name}.1.*
+%{_mandir}/man*/%{name}*.1.*
 %{_infodir}/%{name}.info*
 %{_infodir}/lib%{name}.info*
 %endif
@@ -218,14 +218,13 @@ with Matlab. It may also be used as a batch-oriented language.
 This package contains documentation of Octave in various formats.
 
 %files doc
-%dir %{_pkgdocdir}
-%{_pkgdocdir}/examples/
-%{_pkgdocdir}/liboctave.html/
-%{_pkgdocdir}/liboctave.pdf
-%{_pkgdocdir}/octave.html
-%{_pkgdocdir}/octave.pdf
-%{_pkgdocdir}/refcard*.pdf
-<%{_infodir}/liboctave.*
+%doc examples/
+%{_docdir}/%{name}/liboctave.html/
+%{_docdir}/%{name}/liboctave.pdf
+%{_docdir}/%{name}/octave.html
+%{_docdir}/%{name}/octave.pdf
+%doc doc/refcard/*.pdf
+%doc doc/interpreter/*.pdf
 %endif
 
 #---------------------------------------------------------------------------
@@ -257,9 +256,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
 # docs
 %if %{with docs}
-	%make_build install-data install-html install-info install-pdf DESTDIR=%{buildroot}
-	install -dm 0755 %{buildroot}%{_pkgdocdir}
-    install -pm 0644 doc/refcard/*.pdf %{buildroot}%{_pkgdocdir}/
+	%make install-data install-html install-info install-pdf DESTDIR=%{buildroot}
 %endif
 
 # Make library links
@@ -281,6 +278,9 @@ desktop-file-install \
 	%{buildroot}%{_datadir}/applications/org.octave.Octave.desktop
 
 # packages
+HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+install -dm 0755 %{buildroot}%{_libexecdir}/octave/site/oct/%{octave_api}/$HOST_TYPE
+install -dm 0755 %{buildroot}%{_libexecdir}/octave/site/oct/$HOST_TYPE
 install -dm 0755 %{buildroot}%{_datadir}/octave/packages/
 /bin/touch %{buildroot}%{_datadir}/octave/octave_packages
 
