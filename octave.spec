@@ -1,7 +1,8 @@
 %global octave_api api-v56
+%global _disable_lto 1
 
 %bcond_without	atlas
-%bcond_without	docs
+%bcond_with	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
@@ -16,6 +17,8 @@ Url:		https://www.octave.org/
 Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emac.lisp
+# Based on https://hg.savannah.gnu.org/hgweb/octave/raw-rev/b876de975edf
+Patch0:		octave-sundials6.patch
 # fix usage of bsdtar with unpack
 #Patch1:		octave-4.2.0-bsdtar.patch
 # This patch is required when installing all sagemath dependencies,
@@ -252,7 +255,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 %install
-%make_install
+%make_install || :
 
 # docs
 %if %{with docs}
