@@ -1,8 +1,8 @@
 %global octave_api api-v56
 %global _disable_lto 1
 
-%bcond_without	atlas
-%bcond_with	docs
+%bcond_with	atlas
+%bcond_without	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
@@ -10,7 +10,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	6.4.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -46,7 +46,7 @@ BuildRequires:	gnuplot
 BuildRequires:	gperf
 BuildRequires:	hdf5-devel
 %if %{with java}
-BuildRequires:	java-devel
+BuildRequires:	jdk-current
 #BuildRequires:	javapackages-local
 %endif
 BuildRequires:	icoutils
@@ -135,17 +135,23 @@ C++, C, Fortran, or other languages.
 %doc examples INSTALL.OCTAVE
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/octave-*.conf
 %{_bindir}/%{name}*
-%{_libdir}/%{name}/site
+%dir %{_libdir}/octave/
+%dir %{_libdir}/octave/%{version}
+#{_libdir}/%{name}/site
 %{_libdir}/%{name}/%{version}/oct
 %{_libdir}/%{name}/%{version}/site
+%{_libdir}/%{name}/%{version}/mkoctfile-%{version}
+%{_libdir}/%{name}/%{version}/octave-config-%{version}
 %{_libdir}/%{name}/%{version}/*.so.*
+%{_libdir}/%{name}/packages/
+%{_libdir}/%{name}/site/
 %{_libexecdir}/%{name}/
-%{_datadir}/applications/*
+%{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
 %{_datadir}/metainfo/org.octave.Octave.appdata.xml
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/%{version}%{?rctag}/
+%{_datadir}/%{name}/%{version}/
 %{_datadir}/%{name}/ls-R
 %ghost %{_datadir}/%{name}/octave_packages
 %{_datadir}/%{name}/packages/
@@ -255,7 +261,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 %install
-%make_install || :
+%make_install
 
 # docs
 %if %{with docs}
@@ -263,10 +269,20 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 %endif
 
 # Make library links
-install -dm 0755 %{buildroot}/etc/ld.so.conf.d
-/bin/echo "%{_libdir}/octave-%{version}" > %{buildroot}/etc/ld.so.conf.d/%{name}-%{_arch}.conf
+install -dm 0755 %{buildroot}%{_sysconfdir}/ld.so.conf.d
+/bin/echo "%{_libdir}/%{name}/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
 
-# Remove RPM_BUILD_ROOT from ls-R files
+# FIXME: octave can't find his libraries when building octave add-on  packages
+mv %{buildroot}%{_bindir}/octave-config-%{version} %{buildroot}%{_libdir}/%{name}/%{version}/octave-config-%{version}
+ln -s %{_libdir}/%{name}/%{version}/octave-config-%{version} %{buildroot}%{_bindir}/octave-config-%{version}
+mv %{buildroot}%{_bindir}/mkoctfile-%{version} %{buildroot}%{_libdir}/%{name}/%{version}/mkoctfile-%{version}
+cat > %{buildroot}%{_bindir}/mkoctfile-%{version} <<EOF
+#!/bin/bash
+exec %{_libdir}/%{name}/%{version}/mkoctfile-%{version} -L%{_libdir}/%{name}/%{version} "\$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/mkoctfile-%{version}
+
+# remove RPM_BUILD_ROOT from ls-R files
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
 touch %{buildroot}%{_datadir}/%{name}/ls-R
@@ -282,12 +298,12 @@ desktop-file-install \
 
 # packages
 HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
-install -dm 0755 %{buildroot}%{_libexecdir}/octave/site/oct/%{octave_api}/$HOST_TYPE
-install -dm 0755 %{buildroot}%{_libexecdir}/octave/site/oct/$HOST_TYPE
-install -dm 0755 %{buildroot}%{_datadir}/octave/packages/
+install -dm 0755 %{buildroot}%{_libdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
+install -dm 0755 %{buildroot}%{_libdir}/%{name}/site/oct/$HOST_TYPE
+install -dm 0755 %{buildroot}%{_libdir}/%{name}/packages
+install -dm 0755 %{buildroot}%{_datadir}/%{name}/packages
 /bin/touch %{buildroot}%{_datadir}/octave/octave_packages
 
 # rpm
 install -dm 0755 %{buildroot}%{_sysconfdir}/rpm/macros.d/
 install -pm 0644 %{SOURCE10} %{buildroot}%{_sysconfdir}/rpm/macros.d/%{name}.macros
-
