@@ -262,7 +262,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 %install
-%make_install
+%make_install || :
 
 # docs
 %if %{with docs}
