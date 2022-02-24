@@ -262,7 +262,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
 %install
-%make_install || :
+%make_install
 
 # docs
 %if %{with docs}
@@ -305,6 +305,9 @@ install -dm 0755 %{buildroot}%{_libdir}/%{name}/packages
 install -dm 0755 %{buildroot}%{_datadir}/%{name}/packages
 /bin/touch %{buildroot}%{_datadir}/octave/octave_packages
 
-# rpm
+# rpm macros
 install -dm 0755 %{buildroot}%{_sysconfdir}/rpm/macros.d/
 install -pm 0644 %{SOURCE10} %{buildroot}%{_sysconfdir}/rpm/macros.d/%{name}.macros
+
+# remove static lib stuff
+find %{buildroot}%{_libdir} -name \*.la -delete
