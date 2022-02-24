@@ -10,11 +10,12 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	6.4.0
-Release:	2
+Release:	3
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
 Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
+# from fedora with slight modification
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emac.lisp
 # Based on https://hg.savannah.gnu.org/hgweb/octave/raw-rev/b876de975edf
