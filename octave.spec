@@ -2,7 +2,7 @@
 %global _disable_lto 1
 
 %bcond_with	atlas
-%bcond_without	docs
+%bcond_with	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
@@ -243,6 +243,9 @@ This package contains documentation of Octave in various formats.
 %autosetup -p1
 
 %build
+export CC=gcc
+export CXX=g++
+
 %configure \
 	--enable-shared \
 	--disable-static \
@@ -273,7 +276,7 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 install -dm 0755 %{buildroot}%{_sysconfdir}/ld.so.conf.d
 /bin/echo "%{_libdir}/%{name}/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/%{name}-%{_arch}.conf
 
-# FIXME: octave can't find his libraries when building octave add-on  packages
+# FIXME: octave can't find his libraries when building octave add-on packages
 mv %{buildroot}%{_bindir}/octave-config-%{version} %{buildroot}%{_libdir}/%{name}/%{version}/octave-config-%{version}
 ln -s %{_libdir}/%{name}/%{version}/octave-config-%{version} %{buildroot}%{_bindir}/octave-config-%{version}
 mv %{buildroot}%{_bindir}/mkoctfile-%{version} %{buildroot}%{_libdir}/%{name}/%{version}/mkoctfile-%{version}
@@ -284,10 +287,12 @@ EOF
 chmod +x %{buildroot}%{_bindir}/mkoctfile-%{version}
 
 # remove RPM_BUILD_ROOT from ls-R files
-perl -pi -e "s,%{buildroot},," %{buildroot}%{_libexecdir}/%{name}/ls-R
-perl -pi -e "s,%{buildroot},," %{buildroot}%{_datadir}/%{name}/ls-R
+#touch %{buildroot}%{_libexecdir}/%{name}/ls-R
+#sed -i -e "s|%{buildroot}||g" %{buildroot}%{_libexecdir}/%{name}/ls-R
 touch %{buildroot}%{_datadir}/%{name}/ls-R
+sed -i -e "s|%{buildroot}||g" %{buildroot}%{_datadir}/%{name}/ls-R
 
+# strip .oct files
 %{_bindir}/find %{buildroot} -name "*.oct" -print0 | %{_bindir}/xargs -t -0 -r strip --strip-unneeded
 
 # .desktop
@@ -298,7 +303,7 @@ desktop-file-install \
 	%{buildroot}%{_datadir}/applications/org.octave.Octave.desktop
 
 # packages
-HOST_TYPE=`%{buildroot}%{_bindir}/octave-config -p CANONICAL_HOST_TYPE`
+HOST_TYPE=`%{buildroot}%{_libdir}/%{name}/%{version}/octave-config-%{version} -p CANONICAL_HOST_TYPE`
 install -dm 0755 %{buildroot}%{_libdir}/%{name}/site/oct/%{octave_api}/$HOST_TYPE
 install -dm 0755 %{buildroot}%{_libdir}/%{name}/site/oct/$HOST_TYPE
 install -dm 0755 %{buildroot}%{_libdir}/%{name}/packages
