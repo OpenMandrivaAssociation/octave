@@ -1,5 +1,7 @@
-%global octave_api api-v56
+# Can't mix clang (C/C++) and gcc (fortran) when using LTO
 %global _disable_lto 1
+
+%global octave_api api-v56
 
 %bcond_with	atlas
 %bcond_without	docs
@@ -20,8 +22,8 @@ Source10:	%{name}.macros
 Source20:	octave-2.1.36-emac.lisp
 # Based on https://hg.savannah.gnu.org/hgweb/octave/raw-rev/b876de975edf
 Patch0:		octave-sundials6.patch
-# fix usage of bsdtar with unpack
-#Patch1:		octave-4.2.0-bsdtar.patch
+# fix java check
+Patch1:		octave-java2.patch
 # This patch is required when installing all sagemath dependencies,
 # otherwise it will fail with a message like:
 #
@@ -261,6 +263,11 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
+# docs
+%if %{with docs}
+	%make html info pdf
+%endif
+
 %install
 %make_install
 
@@ -287,7 +294,7 @@ chmod +x %{buildroot}%{_bindir}/mkoctfile-%{version}
 #touch %{buildroot}%{_libexecdir}/%{name}/ls-R
 #sed -i -e "s|%{buildroot}||g" %{buildroot}%{_libexecdir}/%{name}/ls-R
 touch %{buildroot}%{_datadir}/%{name}/ls-R
-sed -i -e "s|%{buildroot}||g" %{buildroot}%{_datacdir}/%{name}/ls-R
+sed -i -e "s|%{buildroot}||g" %{buildroot}%{_datadir}/%{name}/ls-R
 
 # strip .oct files
 %{_bindir}/find %{buildroot} -name "*.oct" -print0 | %{_bindir}/xargs -t -0 -r strip --strip-unneeded
