@@ -246,8 +246,9 @@ This package contains documentation of Octave in various formats.
 %autosetup -p1
 
 %build
-#export CC=gcc
-#export CXX=g++
+# FIXME: lingnu fails with clang compiler
+export CC=gcc
+export CXX=g++
 
 %configure \
 	--enable-shared \
