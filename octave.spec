@@ -1,15 +1,17 @@
-%global octave_api api-v56
+# Can't mix clang (C/C++) and gcc (fortran) when using LTO
 %global _disable_lto 1
 
+%global octave_api api-v57
+
 %bcond_with	atlas
-%bcond_with	docs
+%bcond_without	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	7.1.0
+Version:	7.2.0
 Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
@@ -20,8 +22,8 @@ Source10:	%{name}.macros
 Source20:	octave-2.1.36-emac.lisp
 # Based on https://hg.savannah.gnu.org/hgweb/octave/raw-rev/b876de975edf
 #Patch0:		octave-sundials6.patch
-# fix usage of bsdtar with unpack
-#Patch1:		octave-4.2.0-bsdtar.patch
+# fix java check
+Patch1:		octave-java2.patch
 # This patch is required when installing all sagemath dependencies,
 # otherwise it will fail with a message like:
 #
@@ -86,6 +88,7 @@ BuildRequires:	pkgconfig(Qt5OpenGL)
 BuildRequires:	pkgconfig(Qt5PrintSupport)
 BuildRequires:	pkgconfig(Qt5Help)
 BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:	pkgconfig(RapidJSON)
 BuildRequires:	pkgconfig(readline)
 BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	pkgconfig(xext)
@@ -243,8 +246,8 @@ This package contains documentation of Octave in various formats.
 %autosetup -p1
 
 %build
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 
 %configure \
 	--enable-shared \
@@ -264,12 +267,19 @@ sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
 %make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
 
+# docs
+%if %{with docs}
+	export TEXINFO_XS_PARSER=0
+	make html info pdf
+%endif
+
 %install
 %make_install
 
 # docs
 %if %{with docs}
-	%make install-data install-html install-info install-pdf DESTDIR=%{buildroot}
+	export TEXINFO_XS_PARSER=0
+	make install-data install-html install-info install-pdf DESTDIR=%{buildroot}
 %endif
 
 # Make library links
@@ -316,3 +326,4 @@ install -pm 0644 %{SOURCE10} %{buildroot}%{_sysconfdir}/rpm/macros.d/%{name}.mac
 
 # remove static lib stuff
 find %{buildroot}%{_libdir} -name \*.la -delete
+
