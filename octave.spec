@@ -12,7 +12,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	7.2.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -46,6 +46,7 @@ BuildRequires:	ghostscript-devel
 BuildRequires:	gl2ps-devel
 BuildRequires:	glpk-devel
 BuildRequires:	gnuplot
+BuildRequires:	gomp-devel
 BuildRequires:	gperf
 BuildRequires:	hdf5-devel
 %if %{with java}
@@ -78,6 +79,7 @@ BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(lapack)
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	pkgconfig(ncurses)
+#BuildRequires:	pkgconfig(ompi)
 #BuildRequires:	pkgconfig(osmesa)
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(portaudio-2.0)
