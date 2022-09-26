@@ -93,7 +93,9 @@ BuildRequires:	pkgconfig(Qt5Xml)
 BuildRequires:	pkgconfig(RapidJSON)
 BuildRequires:	pkgconfig(readline)
 BuildRequires:	pkgconfig(sndfile)
+BuildRequires:	pkgconfig(xcursor)
 BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(xfixes)
 BuildRequires:	pkgconfig(xft)
 BuildRequires:	pkgconfig(xinerama)
 BuildRequires:	pkgconfig(xrender)
@@ -268,7 +270,7 @@ export CXX=g++
 # lrelease doesn't require -qt option
 sed -i -e 's|LRELEASEFLAGS="-qt=\$qt_version"|LRELEASEFLAGS=""|g' ./configure
 
-%make_build OCTAVE_RELEASE="%{distribution} %{version}-%{release}"
+%make_build OCTAVE_RELEASE="%{version}-%{release} by %{distribution}"
 
 # docs
 %if %{with docs}
