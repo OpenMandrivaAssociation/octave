@@ -12,7 +12,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	7.2.0
-Release:	3
+Release:	4
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -179,6 +179,7 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	clang
 Requires:	gcc-c++
 Requires:	gcc-gfortran
+Requires:	appstream-util
 Requires:	gl2ps-devel
 Requires:	gnuplot
 Requires:	hdf5-devel
@@ -193,6 +194,7 @@ Requires:	pkgconfig(gl)
 Requires:	pkgconfig(glu)
 Requires:	pkgconfig(GraphicsMagick)
 Requires:	pkgconfig(lapack)
+Requires:	pkgconfig(appstream-glib)
 Requires:	pkgconfig(libpcre)
 Requires:	pkgconfig(libcurl)
 Requires:	pkgconfig(readline)
@@ -250,7 +252,7 @@ This package contains documentation of Octave in various formats.
 %autosetup -p1
 
 %build
-# FIXME: lingnu fails with clang compiler
+# FIXME: gnulib fails with clang compiler
 export CC=gcc
 export CXX=g++
 
