@@ -36,6 +36,9 @@ Patch1:		octave-java2.patch
 %ifarch %{ix86}
 Patch3:		octave-3.6.3-detect-i586-as-little-endian-ieee754.patch
 %endif
+# (upstream)
+#  https://savannah.gnu.org/bugs/?func=detailitem&item_id=62648
+Patch1000:	octave-7.3.0-fix_docs.patch
 
 BuildRequires:	bison
 #BuildRequires:	emacs-nox
@@ -204,7 +207,6 @@ Requires:	qrupdate-devel
 Requires:	suitesparse-devel
 Requires:	texinfo
 Requires:	transfig
-
 
 %description devel
 The octave-devel package contains files needed for developing

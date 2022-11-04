@@ -1,0 +1,25 @@
+diff -r f21b233f3274 doc/interpreter/mk-qthelp.pl
+--- a/doc/interpreter/mk-qthelp.pl        Thu Oct 13 11:27:35 2022 +0200
++++ b/doc/interpreter/mk-qthelp.pl        Thu Oct 13 11:48:40 2022 -0400
+@@ -26,8 +26,9 @@ if ($#ARGV != 1)
+ open (my $HTML, "<", $htmlfname) or die "Unable to open $htmlfname";
+
+ # Skip through preamble of file to find start of list
+-while (($_ = <$HTML>) !~ /^<div class="contents">/ ) {;}
+-while (($_ = <$HTML>) !~ /^<ul class="no-bullet">/ ) {;}
++while (<$HTML>) {next if $_ !~ /^<div class="contents">/; last;}
++while (<$HTML>) {next if $_ !~ /^<ul class="toc-numbered-mark">/; last;}
++    die "index.html: reached EOF: bait changed?" if eof($HTML);
+
+ $level = 0;
+ while (<$HTML>)
+@@ -68,7 +69,8 @@ die "Failed to parse index.html" if ($le
+ open ($HTML, "<", $htmlfname) or die "Unable to open $htmlfname";
+
+ # Skip through preamble of file to find start of list
+-while (($_ = <$HTML>) !~ /^<table class="index-fn/ ) {;}
++while(<$HTML>) {next if $_ !~ /^<table class="fn-entries/; last;}
++    die "Function-Index.html: reached EOF: bait changed?" if eof($HTML);
+
+ while (<$HTML>)
+ {
