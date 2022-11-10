@@ -38,7 +38,7 @@ Patch3:		octave-3.6.3-detect-i586-as-little-endian-ieee754.patch
 %endif
 # (upstream)
 #  https://savannah.gnu.org/bugs/?func=detailitem&item_id=62648
-Patch1000:	octave-7.3.0-fix_docs.patch
+#Patch1000:	octave-7.3.0-fix_docs.patch
 
 BuildRequires:	bison
 #BuildRequires:	emacs-nox
