@@ -4,7 +4,7 @@
 %global octave_api api-v57
 
 %bcond_with	atlas
-%bcond_with	docs
+%bcond_without	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
