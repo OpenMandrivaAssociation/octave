@@ -1,7 +1,7 @@
 # Can't mix clang (C/C++) and gcc (fortran) when using LTO
 %global _disable_lto 1
 
-%global octave_api api-v57
+%global octave_api api-v58
 
 %bcond_with	atlas
 %bcond_without	docs
