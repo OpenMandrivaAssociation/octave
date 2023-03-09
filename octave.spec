@@ -4,14 +4,14 @@
 %global octave_api api-v57
 
 %bcond_with	atlas
-%bcond_with	docs
+%bcond_without	docs
 %bcond_without	java
 %bcond_with	jit
 %bcond_without	64bit_support
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	7.3.0
+Version:	8.1.0
 Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
