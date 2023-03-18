@@ -20,8 +20,8 @@ Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 # from fedora with slight modification
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emac.lisp
-# Based on https://hg.savannah.gnu.org/hgweb/octave/raw-rev/b876de975edf
-#Patch0:		octave-sundials6.patch
+# make libgnu compatible with clang
+Patch0:		octave-8.1.0-libgnu.patch
 # fix java check
 Patch1:		octave-java2.patch
 # This patch is required when installing all sagemath dependencies,
@@ -80,7 +80,7 @@ BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(GraphicsMagick)
 BuildRequires:	pkgconfig(libcurl)
 BuildRequires:	pkgconfig(lapack)
-BuildRequires:	pkgconfig(libpcre)
+BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(ncurses)
 #BuildRequires:	pkgconfig(ompi)
 #BuildRequires:	pkgconfig(osmesa)
@@ -198,7 +198,7 @@ Requires:	pkgconfig(glu)
 Requires:	pkgconfig(GraphicsMagick)
 Requires:	pkgconfig(lapack)
 Requires:	pkgconfig(appstream-glib)
-Requires:	pkgconfig(libpcre)
+Requires:	pkgconfig(libpcre2-8)
 Requires:	pkgconfig(libcurl)
 Requires:	pkgconfig(readline)
 Requires:	pkgconfig(zlib)
@@ -255,8 +255,8 @@ This package contains documentation of Octave in various formats.
 
 %build
 # FIXME: gnulib fails with clang compiler
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 
 %configure \
 	--enable-shared \
