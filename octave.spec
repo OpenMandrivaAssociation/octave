@@ -12,14 +12,14 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	8.1.0
-Release:	3
+Release:	4
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
 Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 # from fedora with slight modification
 Source10:	%{name}.macros
-Source20:	octave-2.1.36-emac.lisp
+Source20:	octave-2.1.36-emacs.lisp
 # make libgnu compatible with clang
 Patch0:		octave-8.1.0-libgnu.patch
 # fix java check
@@ -36,9 +36,6 @@ Patch1:		octave-java2.patch
 %ifarch %{ix86}
 Patch3:		octave-3.6.3-detect-i586-as-little-endian-ieee754.patch
 %endif
-# (upstream)
-#  https://savannah.gnu.org/bugs/?func=detailitem&item_id=62648
-#Patch1000:	octave-7.3.0-fix_docs.patch
 
 BuildRequires:	bison
 #BuildRequires:	emacs-nox
