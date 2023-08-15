@@ -12,7 +12,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	8.3.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
