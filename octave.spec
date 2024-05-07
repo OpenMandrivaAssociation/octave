@@ -11,7 +11,7 @@
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	8.4.0
+Version:	9.1.0
 Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
@@ -21,7 +21,7 @@ Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emacs.lisp
 # make libgnu compatible with clang
-Patch0:		octave-8.1.0-libgnu.patch
+Patch0:		octave-9.1.0-libgnu.patch
 # fix java check
 Patch1:		octave-java2.patch
 # This patch is required when installing all sagemath dependencies,
@@ -83,13 +83,17 @@ BuildRequires:	pkgconfig(ncurses)
 #BuildRequires:	pkgconfig(osmesa)
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(portaudio-2.0)
-BuildRequires:	pkgconfig(Qt5Core)
-BuildRequires:	pkgconfig(Qt5Gui)
-BuildRequires:	pkgconfig(Qt5Network)
-BuildRequires:	pkgconfig(Qt5OpenGL)
-BuildRequires:	pkgconfig(Qt5PrintSupport)
-BuildRequires:	pkgconfig(Qt5Help)
-BuildRequires:	pkgconfig(Qt5Xml)
+BuildRequires:	pkgconfig(Qt6Core)
+BuildRequires:	pkgconfig(Qt6Core5Compat)
+BuildRequires:	pkgconfig(Qt6Gui)
+BuildRequires:	pkgconfig(Qt6Help)
+BuildRequires:	pkgconfig(Qt6Linguist)
+BuildRequires:	pkgconfig(Qt6Network)
+BuildRequires:	pkgconfig(Qt6OpenGL)
+BuildRequires:	pkgconfig(Qt6OpenGLWidgets)
+BuildRequires:	pkgconfig(Qt6PrintSupport)
+BuildRequires:	pkgconfig(Qt6Sql)
+BuildRequires:	pkgconfig(Qt6Xml)
 BuildRequires:	pkgconfig(RapidJSON)
 BuildRequires:	pkgconfig(readline)
 BuildRequires:	pkgconfig(sndfile)
@@ -102,13 +106,9 @@ BuildRequires:	pkgconfig(xrender)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	qhull-devel
 BuildRequires:	qrupdate-devel
-BuildRequires:	qtchooser
-BuildRequires:	qt5-assistant
-BuildRequires:	qt5-linguist
-BuildRequires:	qt5-linguist-tools
-BuildRequires:	qt5-qtchooser
-BuildRequires:	qt5-qttools
-BuildRequires:	qscintilla-qt5-devel
+BuildRequires:	qscintilla-qt6-devel
+BuildRequires:	qt6-qtbase-tools
+BuildRequires:	qt6-qttools-devel
 BuildRequires:	suitesparse-devel
 BuildRequires:	sundials-devel
 BuildRequires:	texinfo
