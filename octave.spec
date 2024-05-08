@@ -157,7 +157,7 @@ C++, C, Fortran, or other languages.
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
-%{_datadir}/metainfo/org.octave.Octave.appdata.xml
+%{_metainfodir}/org.octave.Octave.metainfo.xml
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{version}/
 %{_datadir}/%{name}/ls-R
