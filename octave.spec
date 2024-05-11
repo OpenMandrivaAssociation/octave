@@ -1,7 +1,7 @@
 # Can't mix clang (C/C++) and gcc (fortran) when using LTO
 %global _disable_lto 1
 
-%global octave_api api-v58
+%global octave_api api-v59
 
 %bcond_with	atlas
 %bcond_without	docs
@@ -12,7 +12,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	9.1.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -249,6 +249,14 @@ This package contains documentation of Octave in various formats.
 
 %prep
 %autosetup -p1
+
+# check if octave_api macro is updated
+octave_api_new=$(sed -nE 's,OCTAVE_API_VERSION="(.*)",\1,p' configure.ac)
+if [[ %{octave_api} != "${octave_api_new}" ]]
+then
+  echo "octave_api in spec is set to %{octave_api} but ${octave_api_new} is detected."
+  exit 1
+fi
 
 %build
 # FIXME: gnulib fails with clang compiler
