@@ -3,16 +3,26 @@
 
 %global octave_api api-v59
 
-%bcond_with	atlas
-%bcond_without	docs
-%bcond_without	java
-%bcond_with	jit
-%bcond_without	64bit_support
+%bcond docs		1
+%bcond java		1
+%bcond jit		1
+
+%if %{?__isa_bits:%{__isa_bits}}%{!?__isa_bits:32} == 64
+%global arch64 1
+%else
+%global arch64 0
+%endif
+
+%if 0%{?arch64}
+%bcond use_blas64	1
+%else
+%bcond use_blas64	0
+%endif
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	9.1.0
-Release:	3
+Version:	9.2.0
+Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -63,24 +73,30 @@ BuildRequires:	locales-fr
 #BuildRequires:	locales-zh
 %endif
 BuildRequires:	pkgconfig(alsa)
-BuildRequires:	pkgconfig(arpack)
-%if %{with atlas}
-BuildRequires:	pkgconfig(atlas)
-%endif
-BuildRequires:	pkgconfig(blas)
+#BuildRequires:	pkgconfig(blas)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fftw3)
+%if %{with use_blas64}
+BuildRequires:	pkgconfig(flexiblas64)
+%else
+BuildRequires:	pkgconfig(flexiblas)
+%endif
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(GraphicsMagick)
 BuildRequires:	pkgconfig(libcurl)
-BuildRequires:	pkgconfig(lapack)
+#BuildRequires:	pkgconfig(lapack)
 BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(ncurses)
 #BuildRequires:	pkgconfig(ompi)
 #BuildRequires:	pkgconfig(osmesa)
+#%%if %{with use_blas64}
+#BuildRequires:	pkgconfig(openblas64)
+#%%else
+#BuildRequires:	pkgconfig(openblas)
+#%%endif
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(portaudio-2.0)
 BuildRequires:	pkgconfig(Qt6Core)
@@ -183,11 +199,12 @@ Requires:	appstream-util
 Requires:	gl2ps-devel
 Requires:	gnuplot
 Requires:	hdf5-devel
-Requires:	pkgconfig(arpack)
-%if %{with atlas}
-Requires:	pkgconfig(atlas)
+%if %{with use_blas64}
+Requires:	pkgconfig(flexiblas64)
+%else
+Requires:	pkgconfig(flexiblas)
 %endif
-Requires:	pkgconfig(blas)
+#Requires:	pkgconfig(blas)
 Requires:	pkgconfig(fontconfig)
 Requires:	pkgconfig(fftw3)
 Requires:	pkgconfig(gl)
@@ -259,21 +276,28 @@ then
 fi
 
 %build
-# FIXME: gnulib fails with clang compiler
-#export CC=gcc
-#export CXX=g++
-
 %configure \
 	--enable-shared \
 	--disable-static \
-	--%{?with_64bit_support:en}%{?!with_64bit_support:dis}able-64=yes \
+	--enable-float-truncate \
 	--%{?with_docs:en}%{?!with_docs:dis}able-docs \
-%if %{with atlas}
-	--with-blas="-L%{_libdir}/atlas -ltatlas" \
-	--with-lapack="-L%{_libdir}/atlas -ltatlas" \
-%endif
 	--%{?with_jit:en}%{?!with_jit:dis}able-jit \
 	--enable-link-all-dependencies \
+	--enable-openmp \
+	--with-lapack=flexiblas%{?with_use_blas64:64} \
+	--with-blas=flexiblas%{?with_use_blas64:64} \
+	--with-suitesparseconfig=suitesparseconfig%{?with_use_blas64:64} \
+	--with-amd=amd%{?with_use_blas64:64} \
+	--with-camd=camd%{?with_use_blas64:64} \
+	--with-cs=cs%{?with_use_blas64:64} \
+	--with-colamd=colamd%{?with_use_blas64:64} \
+	--with-ccolamd=ccolamd%{?with_use_blas64:64} \
+	--with-cholmod=cholmod%{?with_use_blas64:64} \
+	--with-cxsparse=cxsparse%{?with_use_blas64:64} \
+	--with-klu=klu%{?with_use_blas64:64} \
+	--with-spqr=spqr%{?with_use_blas64:64} \
+	--with-suitesparseqr=suitesparseqr%{?with_use_blas64:64} \
+	--with-umfpack=umfpack%{?with_use_blas64:64} \
 	%{nil}
 
 # lrelease doesn't require -qt option
