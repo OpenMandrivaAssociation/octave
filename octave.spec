@@ -21,7 +21,7 @@
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	9.2.0
+Version:	9.3.0
 Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
