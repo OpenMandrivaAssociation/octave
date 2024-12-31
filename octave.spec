@@ -1,4 +1,6 @@
-# Can't mix clang (C/C++) and gcc (fortran) when using LTO
+# For now -- since C code (built with clang) and
+# Fortran code (built with gfortran) are linked
+# together, LTO object files don't work
 %global _disable_lto 1
 
 %global octave_api api-v59
@@ -13,8 +15,13 @@
 %global arch64 0
 %endif
 
+# BLAS lib
+%global blaslib flexiblas
+
+# (mandian)
+# blas64 is still not compatible with some packages
 %if 0%{?arch64}
-%bcond use_blas64	1
+%bcond use_blas64	0
 %else
 %bcond use_blas64	0
 %endif
@@ -22,7 +29,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	9.3.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -73,13 +80,12 @@ BuildRequires:	locales-fr
 #BuildRequires:	locales-zh
 %endif
 BuildRequires:	pkgconfig(alsa)
-#BuildRequires:	pkgconfig(blas)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fftw3)
 %if %{with use_blas64}
-BuildRequires:	pkgconfig(flexiblas64)
+BuildRequires:	pkgconfig(%{blaslib}64)
 %else
-BuildRequires:	pkgconfig(flexiblas)
+BuildRequires:	pkgconfig(%{blaslib})
 %endif
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(freetype2)
@@ -87,16 +93,10 @@ BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(glu)
 BuildRequires:	pkgconfig(GraphicsMagick)
 BuildRequires:	pkgconfig(libcurl)
-#BuildRequires:	pkgconfig(lapack)
 BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(ncurses)
 #BuildRequires:	pkgconfig(ompi)
 #BuildRequires:	pkgconfig(osmesa)
-#%%if %{with use_blas64}
-#BuildRequires:	pkgconfig(openblas64)
-#%%else
-#BuildRequires:	pkgconfig(openblas)
-#%%endif
 BuildRequires:	pkgconfig(pixman-1)
 BuildRequires:	pkgconfig(portaudio-2.0)
 BuildRequires:	pkgconfig(Qt6Core)
@@ -200,17 +200,15 @@ Requires:	gl2ps-devel
 Requires:	gnuplot
 Requires:	hdf5-devel
 %if %{with use_blas64}
-Requires:	pkgconfig(flexiblas64)
+Requires:	pkgconfig(%{blaslib}64)
 %else
-Requires:	pkgconfig(flexiblas)
+Requires:	pkgconfig(%{blaslib})
 %endif
-#Requires:	pkgconfig(blas)
 Requires:	pkgconfig(fontconfig)
 Requires:	pkgconfig(fftw3)
 Requires:	pkgconfig(gl)
 Requires:	pkgconfig(glu)
 Requires:	pkgconfig(GraphicsMagick)
-Requires:	pkgconfig(lapack)
 Requires:	pkgconfig(appstream-glib)
 Requires:	pkgconfig(libpcre2-8)
 Requires:	pkgconfig(libcurl)
@@ -284,8 +282,8 @@ fi
 	--%{?with_jit:en}%{?!with_jit:dis}able-jit \
 	--enable-link-all-dependencies \
 	--enable-openmp \
-	--with-lapack=flexiblas%{?with_use_blas64:64} \
-	--with-blas=flexiblas%{?with_use_blas64:64} \
+	--with-lapack=%{blaslib}%{?with_use_blas64:64} \
+	--with-blas=%{blaslib}%{?with_use_blas64:64} \
 	--with-suitesparseconfig=suitesparseconfig%{?with_use_blas64:64} \
 	--with-amd=amd%{?with_use_blas64:64} \
 	--with-camd=camd%{?with_use_blas64:64} \
