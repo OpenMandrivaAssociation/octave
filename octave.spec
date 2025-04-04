@@ -3,7 +3,7 @@
 # together, LTO object files don't work
 %global _disable_lto 1
 
-%global octave_api api-v59
+%global octave_api api-v60
 
 %bcond docs		1
 %bcond java		1
@@ -28,7 +28,7 @@
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	9.4.0
+Version:	10.1.0
 Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
@@ -37,23 +37,6 @@ Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 # from fedora with slight modification
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emacs.lisp
-# make libgnu compatible with clang
-Patch0:		octave-9.1.0-libgnu.patch
-# fix java check
-Patch1:		octave-java2.patch
-# This patch is required when installing all sagemath dependencies,
-# otherwise it will fail with a message like:
-#
-#	$ octave
-#	$ fatal: lo_ieee_init: floating point format is not IEEE! Maybe DLAMCH is miscompiled, or you are using some strange system without IEEE floating point math?
-#
-# and, while the reason is clear (using x87 and 80 bits doubles) the
-# proper library/dependency causing it was not detected.
-# This is not an issue in x86_64 that uses sse2+
-%ifarch %{ix86}
-Patch3:		octave-3.6.3-detect-i586-as-little-endian-ieee754.patch
-%endif
-
 BuildRequires:	bison
 #BuildRequires:	emacs-nox
 BuildRequires:	flex
@@ -137,6 +120,26 @@ Requires:	java-headless
 Requires:	texinfo
 
 Provides:	octave(api) = %{octave_api}
+
+%patchlist
+# make libgnu compatible with clang
+#octave-9.1.0-libgnu.patch
+
+# fix java check
+octave-java2.patch
+
+# This patch is required when installing all sagemath dependencies,
+# otherwise it will fail with a message like:
+#
+#	$ octave
+#	$ fatal: lo_ieee_init: floating point format is not IEEE! Maybe DLAMCH is miscompiled, or you are using some strange system without IEEE floating point math?
+#
+# and, while the reason is clear (using x87 and 80 bits doubles) the
+# proper library/dependency causing it was not detected.
+# This is not an issue in x86_64 that uses sse2+
+%ifarch %{ix86}
+octave-3.6.3-detect-i586-as-little-endian-ieee754.patch
+%endif
 
 %description
 GNU Octave is a high-level language, primarily intended for numerical
