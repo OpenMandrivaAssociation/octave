@@ -29,7 +29,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	10.1.0
-Release:	1
+Release:	2
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -67,8 +67,10 @@ BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fftw3)
 %if %{with use_blas64}
 BuildRequires:	pkgconfig(%{blaslib}64)
+BuildRequires:	pkgconfig(arpack64)
 %else
 BuildRequires:	pkgconfig(%{blaslib})
+BuildRequires:	pkgconfig(arpack)
 %endif
 BuildRequires:	pkgconfig(fontconfig)
 BuildRequires:	pkgconfig(freetype2)
