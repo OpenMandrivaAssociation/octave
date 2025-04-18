@@ -7,7 +7,6 @@
 
 %bcond docs		1
 %bcond java		1
-%bcond jit		1
 
 %if %{?__isa_bits:%{__isa_bits}}%{!?__isa_bits:32} == 64
 %global arch64 1
@@ -56,12 +55,10 @@ BuildRequires:	jdk-current
 BuildRequires:	icoutils
 BuildRequires:	less
 BuildRequires:	librsvg
-%if %{with jit}
 BuildRequires:	llvm-devel
 BuildRequires:	locales-fr
 #BuildRequires:	locales-ja
 #BuildRequires:	locales-zh
-%endif
 BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(cairo)
 BuildRequires:	pkgconfig(fftw3)
@@ -198,6 +195,7 @@ Summary:	Development headers and files for Octave
 Group:		Development/C
 Requires:	%{name} = %{version}-%{release}
 Requires:	clang
+Requires:	clang
 Requires:	gcc-c++
 Requires:	gcc-gfortran
 Requires:	appstream-util
@@ -282,9 +280,7 @@ fi
 %configure \
 	--enable-shared \
 	--disable-static \
-	--enable-float-truncate \
 	--%{?with_docs:en}%{?!with_docs:dis}able-docs \
-	--%{?with_jit:en}%{?!with_jit:dis}able-jit \
 	--enable-link-all-dependencies \
 	--enable-openmp \
 	--with-lapack=%{blaslib}%{?with_use_blas64:64} \
@@ -292,14 +288,12 @@ fi
 	--with-suitesparseconfig=suitesparseconfig%{?with_use_blas64:64} \
 	--with-amd=amd%{?with_use_blas64:64} \
 	--with-camd=camd%{?with_use_blas64:64} \
-	--with-cs=cs%{?with_use_blas64:64} \
 	--with-colamd=colamd%{?with_use_blas64:64} \
 	--with-ccolamd=ccolamd%{?with_use_blas64:64} \
 	--with-cholmod=cholmod%{?with_use_blas64:64} \
 	--with-cxsparse=cxsparse%{?with_use_blas64:64} \
 	--with-klu=klu%{?with_use_blas64:64} \
 	--with-spqr=spqr%{?with_use_blas64:64} \
-	--with-suitesparseqr=suitesparseqr%{?with_use_blas64:64} \
 	--with-umfpack=umfpack%{?with_use_blas64:64} \
 	%{nil}
 
