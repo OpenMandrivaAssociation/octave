@@ -28,7 +28,7 @@
 Summary:	High-level language for numerical computations
 Name:		octave
 Version:	10.1.0
-Release:	2
+Release:	3
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
@@ -116,14 +116,12 @@ Requires:	gnuplot
 Requires:	graphicsmagick
 Requires:	hdf5
 Requires:	java-headless
+Requires:	qt6-qtbase-sql-sqlite
 Requires:	texinfo
 
 Provides:	octave(api) = %{octave_api}
 
 %patchlist
-# make libgnu compatible with clang
-#octave-9.1.0-libgnu.patch
-
 # fix java check
 octave-java2.patch
 
