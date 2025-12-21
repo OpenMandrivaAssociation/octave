@@ -36,6 +36,11 @@ Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 # from fedora with slight modification
 Source10:	%{name}.macros
 Source20:	octave-2.1.36-emacs.lisp
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	bison
 #BuildRequires:	emacs-nox
 BuildRequires:	flex
