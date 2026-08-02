@@ -3,7 +3,7 @@
 # together, LTO object files don't work
 %global _disable_lto 1
 
-%global octave_api api-v60
+%global octave_api api-v61
 
 %bcond docs		1
 %bcond java		1
@@ -27,8 +27,8 @@
 
 Summary:	High-level language for numerical computations
 Name:		octave
-Version:	10.1.0
-Release:	3
+Version:	11.3.0
+Release:	1
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://www.octave.org/
